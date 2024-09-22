@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_TRIES 6
+
+void displayWord(char *word, int *guessed) {
+    for (int i = 0; i < strlen(word); i++) {
+        if (guessed[i]) {
+            printf("%c ", word[i]);
+        } else {
+            printf("_ ");
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    char word[] = "hangman";
+    int guessed[strlen(word)];
+    int attempts = 0;
+    char guess;
+    int correctGuess;
+
+    // Initialize guessed array
+    for (int i = 0; i < strlen(word); i++) {
+        guessed[i] = 0;
+    }
+
+    printf("Welcome to Hangman!\n");
+
+    while (attempts < MAX_TRIES) {
+        displayWord(word, guessed);
+        printf("Enter your guess (a single letter): ");
+        scanf(" %c", &guess);
+
+        correctGuess = 0;
+        for (int i = 0; i < strlen(word); i++) {
+            if (word[i] == guess) {
+                guessed[i] = 1;
+                correctGuess = 1;
+            }
+        }
+
+        if (!correctGuess) {
+            attempts++;
+            printf("Incorrect guess! You have %d tries left.\n", MAX_TRIES - attempts);
+        }
+
+        // Check if the word is completely guessed
+        int wordGuessed = 1;
+        for (int i = 0; i < strlen(word); i++) {
+            if (!guessed[i]) {
+                wordGuessed = 0;
+                break;
+            }
+        }
+
+        if (wordGuessed) {
+            printf("Congratulations! You've guessed the word: %s\n", word);
+            break;
+        }
+    }
+
+    if (attempts == MAX_TRIES) {
+        printf("Game over! The word was: %s\n", word);
+    }
+
+    return 0;
+}
